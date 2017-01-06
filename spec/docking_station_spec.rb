@@ -4,62 +4,29 @@ describe DockingStation do
 
   it { is_expected.to respond_to :release_bike }
 
-  it 'can set a capacity' do
-    expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
+  it 'releases working bikes' do
+    bike = Bike.new
+    subject.dock_bike(bike)
+    subject.release_bike
+    expect(bike).to be_working
   end
-<<<<<<< HEAD
-=======
+
+  it 'will not release bikes when empty' do
+    expect {subject.release_bike}.to raise_error "No bikes available"
+  end
+
+  it { is_expected.to respond_to(:dock_bike).with(1).argument }
+
+  it 'remembers docked bike' do
+    bike = Bike.new
+    subject.dock_bike(bike)
+    expect(subject.bikes[-1]).to eq bike
+  end
+
+  it 'will not dock bikes when full' do
+    subject.capacity.times {subject.dock_bike(Bike.new)}
+    expect {subject.dock_bike(Bike.new)}.to raise_error "Docking station full"
+  end
+
   
->>>>>>> shiawase/day-three
-
-  describe '#release_bike' do
-    it 'releases a bike' do
-      bike = Bike.new
-      subject.dock(bike)
-      expect(subject.release_bike).to eq bike
-    end
-    it 'raises an error when there are no bikes available' do
-      expect { subject.release_bike }.to raise_error 'No bikes available'
-    end
-    it 'does not release bike' do
-      bike = Bike.new
-      bike.report
-      subject.dock(bike)
-      expect { subject.release_bike }.to raise_error 'Bike is broken'
-    end
-  end
- 
- 
-
-
-  it { is_expected.to respond_to(:dock).with(1).argument }
-
-<<<<<<< HEAD
-   describe 'initialization' do
-     subject { DockingStation.new }
-     let(:bike) { Bike.new }
-     it 'defaults capacity' do
-       described_class::DEFAULT_CAPACITY.times do
-         subject.dock(bike)
-       end
-       expect{ subject.dock(bike) }.to raise_error 'Docking Station is full'
-     end
-   end
-  # describe '#dock' do
-  #   it 'raises an error when the docking station is full' do
-  #     (subject.capacity).times { subject.dock Bike.new}
-  #     expect { subject.dock Bike.new }.to raise_error 'Docking Station is full'
-  #   end
-  # end
-=======
-  describe '#dock' do
-    it 'raises an error when the docking station is full' do
-      (subject.capacity).times { subject.dock Bike.new}
-      expect { subject.dock Bike.new }.to raise_error 'Docking Station is full'
-    end
-  end
->>>>>>> shiawase/day-three
-
-
-  it { is_expected.to respond_to(:bike) }
 end
